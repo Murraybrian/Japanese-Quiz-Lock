@@ -1,0 +1,3 @@
+Adjust case sensitive
+Change the english translations to romanji
+add additional field to translate to english
