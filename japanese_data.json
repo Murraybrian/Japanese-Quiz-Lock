@@ -1,9 +1,6 @@
 {
-    "きょお は なに にち です か": "kyoo wa nani nichi desu ka",
-    "おなめ は です か": "oname wa desu ka?",
-    "こんにちは": "konnichiwa",
-    "ありがとう ございます": "arigatou gozaimasu",
-    "こんばんは": "konbanwa",
-    "ごめんなさい": "gomen nasai",
-    "すみません": "sumimasen"
+    "はい": {
+        "romanji": "hai",
+        "english": "yes"
+    }
 }

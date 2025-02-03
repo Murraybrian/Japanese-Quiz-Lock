@@ -22,7 +22,7 @@ class JapaneseLanguageProgram:
         except tk.TclError:
             messagebox.showerror("Theme Error", "Could not load 'forest-dark.tcl'. Ensure the file exists.")
 
-        self.root.geometry("600x400")
+        self.root.geometry("600x450")
         self.setup_main_page()
 
     def load_data(self):
@@ -61,18 +61,24 @@ class JapaneseLanguageProgram:
         romanji_entry = ttk.Entry(self.root)
         romanji_entry.pack(pady=5)
 
+        ttk.Label(self.root, text="English:", font=("Arial", 16)).pack(pady=5)
+        english_entry = ttk.Entry(self.root)
+        english_entry.pack(pady=5)
+
         def save_input():
             jp_input = hiragana_entry.get().strip().lower()
             romanji_input = romanji_entry.get().strip().lower()
+            english_input = english_entry.get().strip().lower()
 
-            if jp_input and romanji_input:
-                self.data[jp_input] = romanji_input
+            if jp_input and romanji_input and english_input:
+                self.data[jp_input] = {"romanji": romanji_input, "english": english_input}
                 self.save_data()
-                messagebox.showinfo("Success", f"Saved: {jp_input} -> {romanji_input}")
+                messagebox.showinfo("Success", f"Saved: {jp_input} -> {romanji_input} -> {english_input}")
                 hiragana_entry.delete(0, tk.END)
                 romanji_entry.delete(0, tk.END)
+                english_entry.delete(0, tk.END)
             else:
-                messagebox.showerror("Error", "Both fields must be filled!")
+                messagebox.showerror("Error", "All fields must be filled!")
 
         ttk.Button(self.root, text="Save", command=save_input).pack(pady=10)
         ttk.Button(self.root, text="Back to Main Menu", command=self.setup_main_page).pack(pady=10)
@@ -89,17 +95,27 @@ class JapaneseLanguageProgram:
         ttk.Label(self.root, text="Quiz", font=("Arial", 20)).pack(pady=20)
 
         jp_word = random.choice(list(self.data.keys()))
-        ttk.Label(self.root, text=f"What is the Romanji for '{jp_word}'?", font=("Arial", 16)).pack(pady=10)
 
+        ttk.Label(self.root, text=f"What is the Romanji for '{jp_word}'?", font=("Arial", 16)).pack(pady=10)
         romanji_entry = ttk.Entry(self.root)
         romanji_entry.pack(pady=10)
 
+        ttk.Label(self.root, text=f"What is the English translation?", font=("Arial", 16)).pack(pady=10)
+        english_entry = ttk.Entry(self.root)
+        english_entry.pack(pady=10)
+
+
         def check_answer():
-            user_input = romanji_entry.get().strip().lower()
-            if user_input == self.data[jp_word]:
+            user_input1 = romanji_entry.get().strip().lower()
+            user_input2 = english_entry.get().strip().lower()
+
+            correct_romanji = self.data[jp_word]["romanji"]
+            correct_english = self.data[jp_word]["english"]
+
+            if user_input1 == correct_romanji and user_input2 == correct_english:
                 messagebox.showinfo("Correct!", "Your answer is correct!")
             else:
-                messagebox.showerror("Wrong!", f"The correct answer is '{self.data[jp_word]}'")
+                messagebox.showerror("Wrong!", f"Correct answers:\nRomanji: {correct_romanji}\nEnglish: {correct_english}")
             self.setup_output_page()  # Reload the output page for a new question
 
         ttk.Button(self.root, text="Check", command=check_answer).pack(pady=10)
