@@ -5,6 +5,7 @@ import random
 import json
 import os
 
+
 class JapaneseLanguageProgram:
     DATA_FILE = "japanese_data.json"
 
@@ -22,7 +23,7 @@ class JapaneseLanguageProgram:
         except tk.TclError:
             messagebox.showerror("Theme Error", "Could not load 'forest-dark.tcl'. Ensure the file exists.")
 
-        self.root.geometry("600x450")
+        self.root.geometry("600x500")
         self.setup_main_page()
 
     def load_data(self):
@@ -96,7 +97,8 @@ class JapaneseLanguageProgram:
 
         jp_word = random.choice(list(self.data.keys()))
 
-        ttk.Label(self.root, text=f"What is the Romanji for '{jp_word}'?", font=("Arial", 16)).pack(pady=10)
+        ttk.Label(self.root, text=f"What is the Romanji for: \n'{jp_word}'",
+                  font=("Arial", 16), justify="center").pack(pady=10)
         romanji_entry = ttk.Entry(self.root)
         romanji_entry.pack(pady=10)
 
@@ -104,6 +106,9 @@ class JapaneseLanguageProgram:
         english_entry = ttk.Entry(self.root)
         english_entry.pack(pady=10)
 
+        # feedback label for check
+        feedback_label = ttk.Label(self.root, font=("Arial", 16))
+        feedback_label.pack_forget()
 
         def check_answer():
             user_input1 = romanji_entry.get().strip().lower()
@@ -113,10 +118,15 @@ class JapaneseLanguageProgram:
             correct_english = self.data[jp_word]["english"]
 
             if user_input1 == correct_romanji and user_input2 == correct_english:
-                messagebox.showinfo("Correct!", "Your answer is correct!")
+                feedback_label.config(text="Correct!", foreground="green")
             else:
-                messagebox.showerror("Wrong!", f"Correct answers:\nRomanji: {correct_romanji}\nEnglish: {correct_english}")
-            self.setup_output_page()  # Reload the output page for a new question
+                feedback_label.config(text=f"Wrong!\nRomanji: {correct_romanji}\nEnglish: {correct_english}",
+                                      foreground="red")
+
+            feedback_label.pack(pady=10)
+
+            # delay for reload
+            self.root.after(3000, self.setup_output_page)
 
         ttk.Button(self.root, text="Check", command=check_answer).pack(pady=10)
         ttk.Button(self.root, text="Back to Main Menu", command=self.setup_main_page).pack(pady=10)
@@ -125,6 +135,7 @@ class JapaneseLanguageProgram:
         """Clear all widgets from the root window."""
         for widget in self.root.winfo_children():
             widget.destroy()
+
 
 # Main program execution
 if __name__ == "__main__":
